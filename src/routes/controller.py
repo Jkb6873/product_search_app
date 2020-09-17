@@ -1,5 +1,6 @@
 from . import api
+from flask import jsonify
 
-@api.route('/', methods=['GET'])
-def search(ingredient_name):
-    return 200
+@api.route('/search', methods=['GET'])
+def search():
+    return jsonify({}), 200
