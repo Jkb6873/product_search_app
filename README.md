@@ -3,7 +3,7 @@ Description
 --------------------
 
 This is a Daily Harvest coding challenge app.
-It provides endpoints to query a product.json file via ingredients.
+It provides endpoints to query a product.json file via ingredients found in an ingredients.json file.
 
 --------------------
 Requirements/ Startup
@@ -11,10 +11,18 @@ Requirements/ Startup
 - Requires Python 3.8
 - run with
 ```
-./startup.sh
+sh startup.sh
 ```
 
----------------------
+--------------------
+Testing
+--------------------
+- run unit/ integration tests with
+```
+sh startup.sh test
+```
+
+--------------------
 Endpoints
 --------------------
 ```
@@ -22,31 +30,28 @@ Endpoints
 ```
 Http Method: GET
 Parameters: ingredient => String
-Response: Json
-Response Codes: 200, 404
+Response: JSON
+Response Codes: 200, 400
 
 Sample 200 Response:
 ```
-{
-  "ingredient_id": 87,
-  "ingredient_name": "Oregano"
-  "products": [
+[
     {
-      "id": 56,
-      "name": "Lentil + Tomato Bolonese"
+        "collection": "Soup",
+        "id": 17,
+        "name": "Tomato + Zucchini Minestrone"
     },
     {
-      "id": 17,
-      "name": "Tomato + Zucchini Minestrone"
+        "collection": "Harvest Bowl",
+        "id": 56,
+        "name": "Lentil + Tomato Bolognese"
     }
-  ]
-}
+]
 ```
 Sample 404 Response:
 ```
 {
-  "ingredient_name": "asdfddf",
-  "msg": "No ingredient found named asdfddf"
+    "error": "No products found containing ingredient 'asdadfasd'"
 }
 ```
 
@@ -58,21 +63,12 @@ Writing this app, there seemed to be two main challenges.
 1- to map the user's input to a valid ingredient.
 2- to efficiently find each product with said ingredient.
 
-The simple solution to the first problem would be to only match the ingredient name 100% literally. This is very simple, but leads to the problem of possibly not matching "Banana" to the valid ingredient "Organic Banana". So we opted to do lazy matching.
+The first problem has three solutions.
+- We can match only to the exact ingredient name, ie "Organic Banana" only matches "Organic Banana" but not "Banana". We can recommend valid keywords similar enough to the user input, but that might be a security flaw.
+- We can break the ingredient name up and remove descriptors like "Organic," so that "Banana" matches "Organic Banana"
+- We can match based on Levensthein Distance, which is the difference between two strings. This has good results for things like "Banana" matching "bananas" but poor results with multiple word strings.
 
-The second issue is more complex.
-We could leave the data as is, meaning every time we look up products related to an ingredient, we do an O(n*k) lookup time search, with n being the amount of products, and k being the ingredients in each product.
-This isn't too bad for now, when we only have 87 products, but as time goes on and products are added, it becomes more and more cumbersome.
-Because of this, a little preprocessing should be done. On start up of the process, we read in the products.json file, and map every ingredient to a set of products.
-This leads to a lookup time of O(1).
-The downside is holding all the products in memory.
-The ideal solution would be to refactor the imaginary database we have to use a many-to-many relationship between ingredients and products.
-
-ie:
-product_id  | ingredient_id
-18  | 112
-18  | 81
-18  | 90
-...
-
-this would lead to ideal lookup times.
+The second issue is more complex, but also had three solutions.
+- Search through the json on every request. This is the worst solution, because it means searching through every product, and every ingredient in the product's ingredientIds. It can be improved by using caching, but it is still very inefficient if the input is varied.
+- Preprocess by creating a map from ingredients to products. This is a better solution because it has a one time cost on startup, and has constant time lookups afterwards. The downside is that it is not extensible, meaning if we wanted to add more functionality to the api, we would have to make a more and more complicated mapping to maintain the speed benefits.
+- Preprocess by loading the json files into an in-memory relational database, which lets us use efficient b-tree indexing for fast lookups via name or id. This is the ideal solution in case we want to add more functionality to the api, though solution 2 is faster if we only care about the current task.

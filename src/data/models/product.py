@@ -1,10 +1,12 @@
-class Product:
-    def __init__(self, id, name, collection, ingredientIds, image):
-        self.id = id
-        self.name = name
-        self.collection = collection
-        self.ingredientIds = ingredientIds
-        self.image = image
+from .. import db
 
-    def __hash__(self):
-        return hash(self.id)
+class Product(db.Model):
+    def __init__(self, id, name, collection, **kwargs):
+        self.id = id
+        self.name = name.title()
+        self.collection = collection.title()
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    collection = db.Column(db.String(64), unique=False, nullable=True)
+    __tablename__ = 'products'
