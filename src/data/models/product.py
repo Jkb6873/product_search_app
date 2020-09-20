@@ -3,7 +3,7 @@ from .. import db
 class Product(db.Model):
     def __init__(self, id, name, collection, **kwargs):
         self.id = id
-        self.name = name.title()
+        self.name = name.title()        #.title() enforces a standard, not 100% necessary
         self.collection = collection.title()
 
     id = db.Column(db.Integer, primary_key=True)

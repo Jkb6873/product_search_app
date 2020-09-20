@@ -11,7 +11,7 @@ export FLASK_APP=app.py
 
 if [[ $1 == "test" ]]; then
   #run tests
-  python -m unittest
+  pytest -v -s
 else
   #start server
   python -m flask run
