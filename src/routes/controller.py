@@ -12,13 +12,6 @@ def search():
     if not ingredient_param:
         return jsonify({"error": "Request missing valid ingredient parameter"}), 400
 
-    # products = list(db.session.execute("""
-    #     select p.name, p.id from products as p
-    #     join product_ingredients as pi on (p.id = pi.product_id)
-    #     join ingredients as i on (pi.ingredient_id = i.id)
-    #     where i.name = '{}'
-    # """.format(ingredient_param.title())))
-
     products = db.session.query(Product)\
                 .join(ProductIngredient, Product.id == ProductIngredient.product_id)\
                 .join(Ingredient, Ingredient.id == ProductIngredient.ingredient_id)\

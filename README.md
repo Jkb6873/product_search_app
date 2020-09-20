@@ -54,7 +54,11 @@ Sample 400 Response:
     "error": "No products found containing ingredient 'asdadfasd'"
 }
 ```
-
+```
+{
+    "error": "Request missing valid ingredient parameter"
+}
+```
 --------------------
 Further Information
 --------------------
