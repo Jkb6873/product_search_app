@@ -8,7 +8,7 @@ It provides endpoints to query a product.json file via ingredients found in an i
 --------------------
 Requirements/ Startup
 --------------------
-- Requires Python 3.7.2
+- Requires Python 3.7.2, tested on macOS Mojave
 - run with
 ```
 sh startup.sh
