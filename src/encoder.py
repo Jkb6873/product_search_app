@@ -9,6 +9,8 @@ class CustomEncoder(json.JSONEncoder):
                 'id': obj.id,
                 'name': obj.name,
                 'collection': obj.collection,
+                'ingredientIds': obj.ingredient_ids,
+                'image': { 'url': obj.img_url }
             }
         if isinstance(obj, Ingredient):
             return {

@@ -2,7 +2,6 @@ import pytest
 from src import create_app
 from . import setup
 
-
 def test_search_matches_format(setup):
     client = setup['app']
 
@@ -11,7 +10,10 @@ def test_search_matches_format(setup):
     assert "id" in product
     assert "name" in product
     assert "collection" in product
-    assert len(product.items()) == 3
+    assert "image" in product
+    assert "ingredientIds" in product
+    assert "url" in product["image"]
+    assert len(product.items()) == 5
 
 
 def test_search_returns_all_products(setup):
