@@ -1,9 +1,9 @@
 import json
 import os
 from . import db
-from models.ingredient import Ingredient
-from models.product import Product
-from models.product_ingredient import ProductIngredient
+from .models.ingredient import Ingredient
+from .models.product import Product
+from .models.product_ingredient import ProductIngredient
 
 def populate_db(app):
     with app.app_context():

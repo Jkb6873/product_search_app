@@ -1,6 +1,6 @@
 from flask import json
-from data.models.ingredient import Ingredient
-from data.models.product import Product
+from .data.models.ingredient import Ingredient
+from .data.models.product import Product
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):

@@ -1,5 +1,5 @@
 from .. import db
-from sqlalchemy import PrimaryKeyConstraint#, relationship
+from sqlalchemy import PrimaryKeyConstraint
 
 class ProductIngredient(db.Model):
     def __init__(self, product_id, ingredient_id):

@@ -1,5 +1,9 @@
-# if no virtualenv, create virtualenv
-[ ! -d venv ] && virtualenv venv
+#PYTHON 2
+# python -m pip install --user virtualenv
+# [ ! -d venv ] && virtualenv venv
+
+#PYTHON 3
+[ ! -d venv ] && python3 -m venv ./venv
 
 # source virtualenv
 source venv/bin/activate
@@ -14,5 +18,5 @@ if [[ $1 == "test" ]]; then
   pytest -v -s
 else
   #start server
-  python -m flask run
+  python3 -m flask run
 fi
