@@ -1,6 +1,7 @@
 import json
 import os
-from . import db
+import requests
+from . import db, ingredient_file, product_file
 from .models.ingredient import Ingredient
 from .models.product import Product
 from .models.product_ingredient import ProductIngredient
@@ -16,19 +17,16 @@ def populate_db(app):
         db.session.commit()
 
 def read_ingredients():
-    data_dir = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(data_dir, 'ingredients.json')) as ingredient_file:
-        ingredients = list(map(lambda obj: Ingredient(**obj), json.load(ingredient_file)))
+    ingredient_data = requests.get(ingredient_file).json()
+    ingredients = list(map(lambda obj: Ingredient(**obj), ingredient_data))
     return ingredients
 
 def read_products():
-    data_dir = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(data_dir, 'products.json')) as product_file:
-        product_data = json.load(product_file)
-        product_list = []
-        product_ingredients = []
-        for product in product_data:
-            product_list.append(Product(**product))
-            for ingredient_id in product['ingredientIds']:
-                product_ingredients.append(ProductIngredient(product['id'], ingredient_id))
+    product_data = requests.get(product_file).json()
+    product_list = []
+    product_ingredients = []
+    for product in product_data:
+        product_list.append(Product(**product))
+        for ingredient_id in product['ingredientIds']:
+            product_ingredients.append(ProductIngredient(product['id'], ingredient_id))
     return product_list, product_ingredients

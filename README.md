@@ -2,8 +2,12 @@
 Description
 --------------------
 
-This is a Daily Harvest coding challenge app.
-It provides endpoints to query a product.json file via ingredients found in an ingredients.json file.
+This service initializes a database based off of product and ingredient information provided.
+It provides endpoints that allow the user to query for products that contain a given ingredient by the ingredient name.
+
+Possible Improvements:
+- Mock the population of the database during testing, since using the whole db is overkill
+- Add a caching layer, perhaps with Redis
 
 --------------------
 Requirements/ Startup

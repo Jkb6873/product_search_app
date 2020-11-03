@@ -1,16 +1,15 @@
 import pytest
 import json
+import requests
 from src import create_app
-from src.data import db
+from src.data import db, ingredient_file, product_file
 
 @pytest.fixture(scope="module", autouse=True)
 def setup():
     app = create_app()
 
-    with open('src/data/ingredients.json') as ingredient_file:
-        ingredients = json.load(ingredient_file)
-    with open('src/data/products.json') as product_file:
-        products = json.load(product_file)
+    ingredients = requests.get(ingredient_file).json()
+    products = requests.get(product_file).json()
 
     with app.app_context():
         yield {"app":app.test_client(), "db":db, "ingredients":ingredients, "products":products}
